@@ -13,29 +13,41 @@
   };
 
   outputs = { self, nixpkgs, flake-utils, rust-overlay }:
-    flake-utils.lib.eachDefaultSystem
-    (system:
-      let
-        overlays = [ (import rust-overlay) ];
-        pkgs = import nixpkgs {
-          inherit system overlays;
-        };
-        # 👇 new! note that it refers to the path ./rust-toolchain.toml
-        # WHAT ARE YOU RUSTTOOLCHAIN??? I assume you keep track/set cargo and rustc versions
-        # but I literally cannot generate and use you in a way I want.
-        # rustToolchain = pkgs.pkgsBuildHost.rust-bin.fromRustupToolchainFile ./rust-toolchain.toml;
-      in
-      with pkgs;
-      {
-        devShells.rust-stable = mkShell {
-          buildInputs = [ rust-bin.stable.latest.default ];
+  flake-utils.lib.eachDefaultSystem
+  (system:
+    let
+      overlays = [ (import rust-overlay) ];
+      pkgs = import nixpkgs {
+        inherit system overlays;
+      };
 
-          shellHook = ''
-            echo "entering awesome rust dev environment"
-            # echo `${cargo}/bin/cargo --version`
-            exec nu
-          '';
-        };
-      }
-    );
+      # packages = [ pkgs.rust-analyzer ];
+      # There's no simple way to generate a rust-toolchain file:
+      # https://github.com/rust-lang/rustup/issues/2868
+      # otherwise it would be a great way to pin versions of cargo n stuff per-project
+      rustToolchain = pkgs.pkgsBuildHost.rust-bin.fromRustupToolchainFile ./rust-toolchain.toml;
+    in
+    with pkgs;
+    {
+      devShells.stable = mkShell {
+        buildInputs = [ rust-bin.stable.latest.default ];
+
+        shellHook = ''
+          exec nu
+        '';
+      };
+
+      devShells.nightly = mkShell {
+        buildInputs = [ rust-bin.nightly.latest.default ];
+
+        shellHook = ''
+          exec nu
+        '';
+      };
+
+      devShells.toolchain = mkShell {
+          buildInputs = [ rustToolchain ];
+      };
+    }
+  );
 }
