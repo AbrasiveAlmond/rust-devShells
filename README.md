@@ -65,19 +65,23 @@ To make the command work globally, that is from any directory, you can add the c
 ```
 
 ## Usage
-After switching configurations you should have access to the devshell from anywhere via the following command:
-
+After switching configurations you should
 `> nix develop rust#stable`
 
-
-> [!NOTE]
-> If this command fails you can use `nix registry list` to see if the flake appears in your registry or check out [my nix config](https://github.com/AbrasiveAlmond/nix-config).
+command f
+you can use `nix registry list` to see if the` flake appears in your registry or check out [my nix config](https://github.com/AbrasiveAlmond/nix-config).
 
 
 # Moving forward
-Make a working flake template for when a new project needs a starting point for a development shell.
-Inspired by [a reddit comment](https://www.reddit.com/r/NixOS/comments/16iysod/comment/k0ojway/?utm_source=share&utm_medium=web3x&utm_name=web3xcss&utm_term=1&utm_content=share_button).
+When a project requires more control a drop-in flake template can be used along with a rust-toolchain.toml file to set dependencies in a more user friendly and rustup compatible way.
+
+This problem has been solved a million times by tools like [Naersk](https://github.com/nix-community/naersk). See the [NixOS Wiki](https://nixos.wiki/wiki/Rust#Packaging_Rust_projects_with_nix) for more.
 
 example:
 
-`> nix flake init -t <flake>#<template>`
+```bash
+> nix flake init -t rust#toolchain
+# Make changes
+> nix develop .#toolchain
+# Enter dev shell
+```
