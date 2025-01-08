@@ -33,8 +33,12 @@
         buildInputs = [ rust-bin.stable.latest.default ];
 
         # Execute user's default shell, nushell as of writing
+        # was really having difficulty with "exec $SHELL"
+        # it keeps changing between nu and bash and not even
+        # depending on which shell you're currently in
+        # thanks to https://unix.stackexchange.com/a/352430
         shellHook = ''
-          ${SHELL}
+          exec `getent passwd $USER | cut -d : -f 7`
         '';
       };
 
@@ -42,7 +46,7 @@
         buildInputs = [ rust-bin.nightly.latest.default ];
 
         shellHook = ''
-          ${SHELL}
+          exec `getent passwd $USER | cut -d : -f 7`
         '';
       };
 
@@ -50,7 +54,7 @@
         buildInputs = [ rustToolchain ];
 
         shellHook = ''
-          ${SHELL}
+          exec `getent passwd $USER | cut -d : -f 7`
         '';
       };
     }
