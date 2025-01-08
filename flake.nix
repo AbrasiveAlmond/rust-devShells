@@ -32,8 +32,9 @@
       devShells.stable = mkShell {
         buildInputs = [ rust-bin.stable.latest.default ];
 
+        # Execute user's default shell, nushell as of writing
         shellHook = ''
-          exec nu
+          ${SHELL}
         '';
       };
 
@@ -41,12 +42,16 @@
         buildInputs = [ rust-bin.nightly.latest.default ];
 
         shellHook = ''
-          exec nu
+          ${SHELL}
         '';
       };
 
       devShells.toolchain = mkShell {
-          buildInputs = [ rustToolchain ];
+        buildInputs = [ rustToolchain ];
+
+        shellHook = ''
+          ${SHELL}
+        ''
       };
     }
   );
