@@ -58,6 +58,7 @@ To make the command work globally, that is from any directory, you can add the c
 {
   # --snip--
   nix.registry = {
+    # "rust" can be changed to anything.
     rust.flake = inputs.rust-devShells;
   };
 }
@@ -67,8 +68,16 @@ To make the command work globally, that is from any directory, you can add the c
 After switching configurations you should have access to the devshell from anywhere via the following command:
 
 `> nix develop rust#stable`
-> [!TIP]
-> note the "rust" name can be changed to anything you like.
+
 
 > [!NOTE]
 > If this command fails you can use `nix registry list` to see if the flake appears in your registry or check out [my nix config](https://github.com/AbrasiveAlmond/nix-config).
+
+
+# Moving forward
+Make a working flake template for when a new project needs a starting point for a development shell.
+Inspired by [a reddit comment](https://www.reddit.com/r/NixOS/comments/16iysod/comment/k0ojway/?utm_source=share&utm_medium=web3x&utm_name=web3xcss&utm_term=1&utm_content=share_button).
+
+example:
+
+`> nix flake init -t <flake>#<template>`
